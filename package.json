@@ -1,6 +1,6 @@
 {
   "name": "strateegia-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "library to access strateegia platform",
   "main": "strateegia-api.js",
   "type": "module",
