@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 const API_URL_PROJECTS = 'https://api.strateegia.digital/projects/v1/';
 const API_URL_USERS = 'https://api.strateegia.digital/users/v1/';
 const API_URL_TOOLS = 'https://api.strateegia.digital/tools/v1/';
