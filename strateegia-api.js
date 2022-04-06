@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 
 const API_URL_PROJECTS = 'https://api.strateegia.digital/projects/v1/';
 const API_URL_USERS = 'https://api.strateegia.digital/users/v1/';
+const API_URL_TOOLS = 'https://api.strateegia.digital/tools/v1/';
 
 export async function auth(username, password) {
     const base64Login = btoa(`${username}:${password}`);
@@ -222,4 +223,46 @@ export async function createDivergencePoint(token, mapId, toolId, col, row) {
 
     return await response.json();
 }
+
+// ###### TOOLS #######
+
+export async function getAllMyTools(token) {
+
+    const response = await fetch(`${API_URL_TOOLS}tool?size=5000`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
+export async function createTool(token, title, color, description, questions, references) {
+    const payload = {
+        "title": title,
+        "color": color,
+        "description": description,
+        "questions": questions,
+        "references": references,
+    }
+    const JSONkit = JSON.stringify(payload);
+
+    const response = await fetch(`${API_URL_TOOLS}tool`, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: `${JSONkit}`
+    });
+
+    return await response.json();
+}
+
+
+
 
