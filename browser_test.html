@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Test</title>
+    <script src="http://unpkg.com/vue"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex w-screen">
+    <div id="app" class=" w-full flex flex-col">
+        <!-- Auth Form -->
+        <form @submit.prevent="authTest" class="p-10 m-10 border-2 border-blue-600 rounded-lg">
+            <div class="flex flex-col font-support text-xl my-2">
+                <label for="login" class="font-semibold">Username</label>
+                <input type="text" class="px-3 py-2 rounded-lg outline-none border-2 border-blue-600" placeholder="example@example.com" name="login" id="login" v-model="username" required />
+            </div>
+            <div class="flex flex-col font-support text-xl my-2">
+                <label for="password" class="font-semibold">Password</label>
+                <input type="password" class="px-3 py-2 rounded-lg outline-none border-2 border-blue-600" name="password" id="password" v-model="password" required />
+            </div>
+            <div>
+                <button class="w-full p-5 border-2 bg-blue-200 border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white" type="submit">Entrar</button>
+            </div>
+        </form>
+        <!-- User Token -->
+        <div v-if="signed" class="p-10 m-10 border-2 border-green-600 bg-green-100 rounded-lg">
+            <div class="w-full">
+                <h1 class="text-2xl">Autenticado com sucesso!</h1>
+                <h2 class="break-all">Token:{{token}} </h2>
+            </div>
+        </div>
+        <!-- User Projects -->
+        <div v-if="projects.length > 0" class="p-10 m-10 border-2 border-green-600 bg-green-100 rounded-lg">
+            <div class="w-full">
+                <h1 class="text-2xl">Projects</h1>
+                <h2 class="break-all">{{projects}} </h2>
+            </div>
+        </div>
+        <!-- User Tools -->
+        <div v-if="tools.length != []" class="p-10 m-10 border-2 border-green-600 bg-green-100 rounded-lg">
+            <div class="w-full">
+                <h1 class="text-2xl">Tools</h1>
+                <h2 class="break-all">{{tools}} </h2>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import { auth, getAllProjects, getAllMyTools } from './strateegia-api.js'
+        const app = Vue.createApp({
+            data() {
+                return {
+                    username: '',
+                    password: '',
+                    token: '',
+                    signed: false,
+                    projects: [],
+                    tools: []
+                }
+            },
+            methods: {
+                async authTest() {
+                    await auth(this.username, this.password).then((data) => {
+                        this.signed = true
+                        this.token = data
+                    })
+                    this.getProjects()
+                    this.getTools()
+                },
+                async getProjects() {
+                    await getAllProjects(this.token).then((data) => {
+                        this.projects = data
+                    })
+                },
+                async getTools() {
+                    await getAllMyTools(this.token).then((data) => {
+                        this.tools = data
+                    })
+                    console.log(this.tools)
+                }
+            }
+        }).mount("#app")
+
+    </script>
+</body>
+
+</html>
