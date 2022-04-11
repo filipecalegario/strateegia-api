@@ -66,9 +66,11 @@
                     await auth(this.username, this.password).then((data) => {
                         this.signed = true
                         this.token = data
+                        this.getProjects()
+                        this.getTools()
+                    }).catch((error) => {
+                        throw new Error(error)
                     })
-                    this.getProjects()
-                    this.getTools()
                 },
                 async getProjects() {
                     await getAllProjects(this.token).then((data) => {
@@ -79,7 +81,6 @@
                     await getAllMyTools(this.token).then((data) => {
                         this.tools = data
                     })
-                    console.log(this.tools)
                 }
             }
         }).mount("#app")

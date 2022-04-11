@@ -21,6 +21,7 @@ export async function auth(username, password) {
     });
 }
 
+//Default Header Strateegia Request
 function defaultHeader(token) {
     return {
         'Content-Type': 'application/json',
@@ -28,9 +29,9 @@ function defaultHeader(token) {
     }
 }
 
-export async function getAllProjects(token) {
-
-    return await fetch(`${API_URL_PROJECTS}project?size=5000`, {
+//Default Get Request
+async function defaultGet(token, url) {
+    return await fetch(url, {
         method: 'get',
         headers: defaultHeader(token)
     }).then(async (data) => {
@@ -41,153 +42,72 @@ export async function getAllProjects(token) {
     });
 }
 
-export async function getSummaryProjectsByUser(token) {
-
-    return await fetch(`${API_URL_PROJECTS}project/summary?size=5000`, {
+//Default Post Request
+async function defaultPost(token, url, body) {
+    return await fetch(url, {
         method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
+        headers: defaultHeader(token),
+        body: body
+    }).then(async (data) => {
+        const response = await data.json()
+        return response
     }).catch((error) => {
         throw new Error('Erro no processamento')
     });
+}
 
+export async function getAllProjects(token) {
+    return await defaultGet(token, `${API_URL_PROJECTS}project?size=5000`)
+}
+
+export async function getSummaryProjectsByUser(token) {
+    return await defaultGet(token, `${API_URL_PROJECTS}project/summary?size=5000`)
 }
 
 export async function getProjectById(token, projectId) {
-
-    return await fetch(`${API_URL_PROJECTS}project/${projectId}`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}project/${projectId}`)
 }
 export async function getCommentEngagementByContent(token, projectId) {
-
-    return await fetch(`${API_URL_PROJECTS}project/${projectId}/divergence-point-engagement`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}project/${projectId}/divergence-point-engagement`)
 }
 
 export async function getAllDivergencePointsByMapId(token, mapId) {
-
-    return await fetch(`${API_URL_PROJECTS}map/${mapId}/divergence-point?size=5000`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}map/${mapId}/divergence-point?size=5000`)
 }
 
 export async function getMapById(token, mapId) {
 
-    return await fetch(`${API_URL_PROJECTS}map/${mapId}`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}map/${mapId}`)
 }
 
 export async function getDivergencePointById(token, contentId) {
-
-    return await fetch(`${API_URL_PROJECTS}divergence-point/${contentId}`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}divergence-point/${contentId}`)
 }
 
 export async function getParentComments(token, divPointId, questionId) {
-
-    return await fetch(`${API_URL_PROJECTS}divergence-point/${divPointId}/question/${questionId}/comment?size=5000`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}divergence-point/${divPointId}/question/${questionId}/comment?size=5000`)
 }
 
 export async function getCommentsGroupedByQuestionReport(token, divPointId) {
-
-    return await fetch(`${API_URL_PROJECTS}divergence-point/${divPointId}/comment/report?size=5000`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_PROJECTS}divergence-point/${divPointId}/comment/report?size=5000`)
 }
 
 export async function getUser(token) {
-
-    return await fetch(`${API_URL_USERS}user/me`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_USERS}user/me`)
 }
 
 export async function createParentComment(token, divPointId, questionId, comment) {
     const payload = { "text": comment }
     const JSONkit = JSON.stringify(payload);
 
-    return await fetch(`${API_URL_PROJECTS}divergence-point/${divPointId}/question/${questionId}/comment`, {
-        method: 'post',
-        headers: defaultHeader(token),
-        body: `${JSONkit}`
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultPost(token, `${API_URL_PROJECTS}divergence-point/${divPointId}/question/${questionId}/comment`, `${JSONkit}`)
 }
 
 export async function createReplyComment(token, parentCommentId, comment) {
     const payload = { "text": comment }
     const JSONkit = JSON.stringify(payload);
 
-    return await fetch(`${API_URL_PROJECTS}question/comment/${parentCommentId}/reply`, {
-        method: 'post',
-        headers: defaultHeader(token),
-        body: `${JSONkit}`
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultPost(token, `${API_URL_PROJECTS}question/comment/${parentCommentId}/reply`, `${JSONkit}`)
 }
 
 export async function createDivergencePoint(token, mapId, toolId, col, row) {
@@ -199,32 +119,14 @@ export async function createDivergencePoint(token, mapId, toolId, col, row) {
         "tool_id": toolId
     }
     const JSONkit = JSON.stringify(payload);
-
-    return await fetch(`${API_URL_PROJECTS}map/${mapId}/divergence-point`, {
-        method: 'post',
-        headers: defaultHeader(token),
-        body: `${JSONkit}`
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultPost(token, `${API_URL_PROJECTS}map/${mapId}/divergence-point`, `${JSONkit}`)
 }
 
 // ###### TOOLS #######
 
 export async function getAllMyTools(token) {
 
-    return await fetch(`${API_URL_TOOLS}tool?size=5000`, {
-        method: 'get',
-        headers: defaultHeader(token)
-    }).then(async (data) => {
-        const response = await data.json();
-        return response;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultGet(token, `${API_URL_TOOLS}tool?size=5000`)
 
 }
 
@@ -238,14 +140,5 @@ export async function createTool(token, title, color, description, questions, re
     }
     const JSONkit = JSON.stringify(payload);
 
-    return await fetch(`${API_URL_TOOLS}tool`, {
-        method: 'post',
-        headers: defaultHeader(token),
-        body: `${JSONkit}`
-    }).then(async (response) => {
-        const data = await response.json();
-        return data;
-    }).catch((error) => {
-        throw new Error('Erro no processamento')
-    });
+    return await defaultPost(token, `${API_URL_TOOLS}tool`, `${JSONkit}`)
 }
