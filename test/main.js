@@ -1,4 +1,4 @@
-import { createTool } from "../strateegia-api.js";
+import { createTool, getConvergencePointById } from "../strateegia-api.js";
 
 const accessToken = localStorage.getItem("strateegiaAccessToken");
 
@@ -16,5 +16,8 @@ async function test() {
     // const responseFromCreateTool = await createTool(accessToken, "My second new tool", "BLUE", "this is my new tool", questions, references);
 
     // console.log(responseFromCreateTool);
+
+    const convergencePoint = await getConvergencePointById(accessToken, "625079c6aedbf41fe9d1df0f");
+    console.log(convergencePoint);
 }
 

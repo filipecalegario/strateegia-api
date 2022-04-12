@@ -123,6 +123,21 @@ export async function getDivergencePointById(token, contentId) {
     return data;
 }
 
+export async function getConvergencePointById(token, contentId) {
+
+    const response = await fetch(`${API_URL_PROJECTS}convergence-point/${contentId}`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
 export async function getParentComments(token, divPointId, questionId) {
 
     const response = await fetch(`${API_URL_PROJECTS}divergence-point/${divPointId}/question/${questionId}/comment?size=5000`, {
@@ -221,6 +236,8 @@ export async function createDivergencePoint(token, mapId, toolId, col, row) {
 
     return await response.json();
 }
+
+// ###### CONVERGENCE POINTS #######
 
 // ###### TOOLS #######
 
