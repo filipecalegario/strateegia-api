@@ -239,6 +239,46 @@ export async function createDivergencePoint(token, mapId, toolId, col, row) {
 
 // ###### CONVERGENCE POINTS #######
 
+export async function createConvergencePoint(token, mapId, closingDate, positionX, positionY, questions) {
+    // const payload = {
+    //     "closing_date": "2022-02-12T04:54:07.085Z",
+    //     "position": {
+    //         "col": 0,
+    //         "row": 0
+    //     },
+    //     "questions": [
+    //         {
+    //             "text": "string",
+    //             "options": [
+    //                 {
+    //                     "text": "string"
+    //                 }
+    //             ],
+    //         }
+    //     ]
+    // }
+    const payload = {
+        "closing_date": closingDate,
+        "position": {
+            "row": positionX,
+            "col": positionY
+        },
+        "questions": questions
+    }
+    const JSONkit = JSON.stringify(payload);
+
+    const response = await fetch(`${API_URL_PROJECTS}map/${mapId}/convergence-point`, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: `${JSONkit}`
+    });
+
+    return await response.json();
+}
+
 // ###### TOOLS #######
 
 export async function getAllMyTools(token) {
