@@ -183,6 +183,23 @@ export async function getUser(token) {
     return data;
 }
 
+export async function createMap(token, projectId, title){
+        const response = await fetch(`${API_URL_PROJECTS}project/${projectId}/map`, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                title: title
+            })
+        });
+    
+        const data = await response.json();
+    
+        return data;
+}
+
 export async function createParentComment(token, divPointId, questionId, comment) {
     const payload = { "text": comment }
     const JSONkit = JSON.stringify(payload);
