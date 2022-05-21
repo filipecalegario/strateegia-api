@@ -20,9 +20,19 @@ console.log(access_token);
 
 // console.log(allTools);
 
-const questions = [{ "question": "My first question" }, { "question": "My second question" }];
-const references = [{ "description": "My first reference", "url": "https://www.google.com" }, { "description": "My second reference", "url": "https://www.ufpe.br" }];
+// const questions = [{ "question": "My first question" }, { "question": "My second question" }];
+// const references = [{ "description": "My first reference", "url": "https://www.google.com" }, { "description": "My second reference", "url": "https://www.ufpe.br" }];
 
-const responseFromCreateTool = await createTool(access_token, "My new tool", "BLUE", "this is my new tool", questions, references);
+// const responseFromCreateTool = await createTool(access_token, "My new tool", "BLUE", "this is my new tool", questions, references);
 
-console.log(responseFromCreateTool);
+// console.log(responseFromCreateTool);
+
+const mapId = "5ea96f7d33cacd07a60426b2";
+
+const mapContents = await getMapById(access_token, mapId);
+
+console.log(mapContents);
+
+const checkpoints = mapContents.points.filter(point => point.point_type === "CONVERSATION");
+
+console.log(checkpoints);

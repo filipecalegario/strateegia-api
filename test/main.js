@@ -1,4 +1,4 @@
-import { createTool, getConvergencePointById, createConvergencePoint, createMap } from "../strateegia-api.js";
+import { createTool, getConvergencePointById, createConvergencePoint, createMap, getMapById, getCheckpointById, getAllCheckpointCommentsByCheckpointId } from "../strateegia-api.js";
 
 const accessToken = localStorage.getItem("strateegiaAccessToken");
 
@@ -27,11 +27,45 @@ async function test() {
     // const questions = [{"text": "question2", options: [{"text": "optionA"}, {"text": "optionB"}]}];
     // const responseFromCreateConvergencePoint = await createConvergencePoint(accessToken, "61f2aa932a0271235e71b33e", closing_date, positionX, positionY, questions);
     // console.log(responseFromCreateConvergencePoint);
-    const projectId = "627e4febe3d4056cc916370b";
-    const title = "Mapa Morfológico";
+    // const projectId = "627e4febe3d4056cc916370b";
+    // const title = "Mapa Morfológico";
 
-    const responseFromCreateMap = await createMap(accessToken, projectId, title);
-    console.log(responseFromCreateMap);
+    // const responseFromCreateMap = await createMap(accessToken, projectId, title);
+    // console.log(responseFromCreateMap);
 
+    const mapId = "5ea96f7d33cacd07a60426b2";
+
+    const mapContents = await getMapById(accessToken, mapId);
+
+    console.log(mapContents);
+
+    const checkpoints = mapContents.points.filter(point => point.point_type === "CONVERSATION");
+
+    console.log(checkpoints);
+
+    const requestsPopulatedCheckpoints = [];
+    const requestsCheckpointsComments = [];
+
+    checkpoints.forEach(checkpoint => {
+        requestsPopulatedCheckpoints.push(getCheckpointById(accessToken, checkpoint.id));
+        requestsCheckpointsComments.push(getAllCheckpointCommentsByCheckpointId(accessToken, checkpoint.id));
+    });
+
+    const responsesPopulatedCheckpoints = await Promise.all(requestsPopulatedCheckpoints);
+    const responsesCheckpointsComments = await Promise.all(requestsCheckpointsComments);
+
+    const checkpointAndComments = new Map();
+
+    responsesPopulatedCheckpoints.forEach(checkpoint => {
+        checkpointAndComments.set(checkpoint.id, { checkpoint, comments: [] });
+    });
+
+    responsesCheckpointsComments.forEach(element => {
+        element.content.forEach(comment => {
+            checkpointAndComments.get(comment.checkpoint_id).comments.push(comment);
+        });
+    });
+
+    console.log(checkpointAndComments);
 }
 

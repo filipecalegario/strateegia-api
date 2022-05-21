@@ -123,21 +123,6 @@ export async function getDivergencePointById(token, contentId) {
     return data;
 }
 
-export async function getConvergencePointById(token, contentId) {
-
-    const response = await fetch(`${API_URL_PROJECTS}convergence-point/${contentId}`, {
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    });
-
-    const data = await response.json();
-
-    return data;
-}
-
 export async function getParentComments(token, divPointId, questionId) {
 
     const response = await fetch(`${API_URL_PROJECTS}divergence-point/${divPointId}/question/${questionId}/comment?size=5000`, {
@@ -168,6 +153,66 @@ export async function getCommentsGroupedByQuestionReport(token, divPointId) {
     return data;
 }
 
+export async function getConvergencePointById(token, contentId) {
+
+    const response = await fetch(`${API_URL_PROJECTS}convergence-point/${contentId}`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
+export async function getCheckpointById(token, contentId) {
+
+    const response = await fetch(`${API_URL_PROJECTS}checkpoint/${contentId}`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
+export async function getAllCheckpointCommentsByCheckpointId(token, checkpointId) {
+
+    const response = await fetch(`${API_URL_PROJECTS}checkpoint/${checkpointId}/comment?size=5000`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
+export async function getAllReplyCheckpointCommentsByParentId(token, parentId) {
+
+    const response = await fetch(`${API_URL_PROJECTS}comment/${parentId}/reply?size=5000`, {
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    return data;
+}
+
 export async function getUser(token) {
 
     const response = await fetch(`${API_URL_USERS}user/me`, {
@@ -183,21 +228,23 @@ export async function getUser(token) {
     return data;
 }
 
-export async function createMap(token, projectId, title){
-        const response = await fetch(`${API_URL_PROJECTS}project/${projectId}/map`, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                title: title
-            })
-        });
-    
-        const data = await response.json();
-    
-        return data;
+// CREATEs
+
+export async function createMap(token, projectId, title) {
+    const response = await fetch(`${API_URL_PROJECTS}project/${projectId}/map`, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            title: title
+        })
+    });
+
+    const data = await response.json();
+
+    return data;
 }
 
 export async function createParentComment(token, divPointId, questionId, comment) {
