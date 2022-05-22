@@ -66,6 +66,11 @@ async function test() {
         });
     });
 
-    console.log(checkpointAndComments);
+    // console.log(checkpointAndComments);
+
+    //iterate over checkpointAndComments
+    checkpointAndComments.forEach(element => {
+        console.log(element);
+    });
 }
 
